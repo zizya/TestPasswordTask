@@ -1,0 +1,16 @@
+<div class="hero">
+  <div class="heroForm">
+    <span>Password test</span>
+    <form action="">
+      <input type="password" id="password" name="password" [(ngModel)]="password" (input)="checkPass()"
+             placeholder="Password">
+    </form>
+    <div class="passSection" [ngStyle]="{'background-color':passSection1}"></div>
+
+    <div class="passSection" [ngStyle]="{'background-color':passSection2}">
+      {{passSectionText}}
+    </div>
+
+    <div class="passSection" [ngStyle]="{'background-color':passSection3}"></div>
+  </div>
+</div>
