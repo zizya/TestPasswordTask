@@ -1,16 +1,11 @@
 <div class="hero">
   <div class="heroForm">
     <span>Password test</span>
-    <form action="">
-      <input type="password" id="password" name="password" [(ngModel)]="password" (input)="checkPass()"
-             placeholder="Password">
+    <form [formGroup]="reactiveForm">
+      <input type="password" id="password" formControlName="password"/>
     </form>
-    <div class="passSection" [ngStyle]="{'background-color':passSection1}"></div>
-
-    <div class="passSection" [ngStyle]="{'background-color':passSection2}">
-      {{passSectionText}}
-    </div>
-
-    <div class="passSection" [ngStyle]="{'background-color':passSection3}"></div>
+    <div class="passSection" [ngClass]="{'weak': weak,'medium': medium, 'strong':strong, 'less8':less8}"></div>
+    <div class="passSection" [ngClass]="{'medium': medium, 'strong':strong, 'less8':less8}"></div>
+    <div class="passSection" [ngClass]="{'strong':strong,'less8':less8}"></div>
   </div>
 </div>

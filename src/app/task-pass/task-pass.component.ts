@@ -1,4 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {CheckWeakService} from "./service/checkWeak.service";
+import {CheckMediumService} from "./service/check-medium.service";
+import {CheckStrongService} from "./service/check-strong.service";
+import {Less8Service} from "./service/less8.service";
+
 
 @Component({
   selector: 'app-task-pass',
@@ -6,48 +12,44 @@ import {Component} from '@angular/core';
   styleUrls: ['./task-pass.component.css']
 
 })
-export class TaskPassComponent {
-  password: string = '';
-  passSection1: string = 'gray';
-  passSection2: string = 'gray';
-  passSection3: string = 'gray';
-  passSectionText: string = '';
+export class TaskPassComponent implements OnInit {
+  weak: boolean = false;
+  medium: boolean = false;
+  strong: boolean = false;
+  less8: boolean = false;
+  reactiveForm: FormGroup;
 
-  checkPass() {
+  constructor(private fb: FormBuilder,
+              private checkWeak: CheckWeakService,
+              private checkMedium: CheckMediumService,
+              private checkStrong: CheckStrongService,
+              private checkLess8: Less8Service
+  ) {
+    this.reactiveForm = this.fb.group({
+      password: ['', [
+        Validators.required,
+        Validators.pattern(/.{8,}/)
+      ]]
+    });
+  }
 
-    if (this.password.length == 0) {
-      this.passSection1 = 'gray';
-      this.passSection2 = 'gray';
-      this.passSection3 = 'gray';
-      this.passSectionText= 'Password length = 0';
+  ngOnInit() {
+    this.initForm();
+  }
 
-    } else if (this.password.length < 8) {
-      this.passSection1 = 'red';
-      this.passSection2 = 'red';
-      this.passSection3 = 'red';
-      this.passSectionText= 'Password length < 8 symbols';
-    } else {
-      const regLetters = /[a-zA-Z]/.test(this.password);
-      const regDigits = /\d/.test(this.password);
-      const regSymbols = /[!@#$%^&*+=.<>{}:;`"'~_-]/.test(this.password);
-
-      if (regLetters && regDigits && regSymbols) {
-        this.passSection1 = 'green';
-        this.passSection2 = 'green';
-        this.passSection3 = 'green';
-        this.passSectionText= 'Password is strong';
-      } else if ((regLetters && regDigits) || (regDigits && regSymbols) || (regLetters && regSymbols)) {
-        this.passSection1 = 'yellow';
-        this.passSection2 = 'yellow';
-        this.passSection3 = 'gray';
-        this.passSectionText= 'Password is medium';
-      } else if (regLetters || regDigits || regSymbols) {
-        this.passSection1 = 'red';
-        this.passSection2 = 'gray';
-        this.passSection3 = 'gray';
-        this.passSectionText= 'Password is Weak';
-
-      }
+  private initForm() {
+    const password = this.reactiveForm.get('password');
+    if (password) {
+      password.valueChanges.subscribe(value => {
+        this.checkPass(value);
+      });
     }
+  }
+
+  checkPass(pass: string) {
+    this.weak = this.checkWeak.checkPass(pass);
+    this.medium = this.checkMedium.checkPass(pass);
+    this.strong = this.checkStrong.checkPass(pass);
+    this.less8 = this.checkLess8.checkPass(pass);
   }
 }
