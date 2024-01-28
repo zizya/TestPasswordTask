@@ -1,5 +1,4 @@
-testTaskPass
-test task for  at USENSE Company
+
 
 please open terminal and write ng serve
 when page is ready  you can write a password to check it.
